@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,9 +17,9 @@ class FetchJoinAliasTest {
 	@Autowired
 	private EntityManager em;
 
+	@DisplayName("fetch join 시에 fetch 대상에 조건을 걸면 의도하지 않은 결과 반환")
 	@Test
 	void fetchJoinTest() {
-
 		Team team = new Team();
 		team.setName("teamA");
 		em.persist(team);
@@ -36,12 +37,21 @@ class FetchJoinAliasTest {
 		em.flush();
 		em.clear();
 
-		List<Team> result = em.createQuery(
+		List<Team> resultUsingAlias = em.createQuery(
 				"select t from Team t join fetch t.members m where m.username = 'user1'", Team.class)
 			.getResultList();
 
-		assertThat(result).hasSize(1);
-		assertThat(result.get(0).getMembers()).hasSize(1);
+		assertThat(resultUsingAlias.get(0).getMembers())
+			.hasSize(1)
+			.extracting("username").containsExactly("user1");
+
+		List<Team> result = em.createQuery(
+				"select distinct t from Team t join fetch t.members", Team.class)
+			.getResultList();
+
+		assertThat(result.get(0).getMembers())
+			.hasSize(1)
+			.extracting("username").containsExactly("user1");
 	}
 
 }
