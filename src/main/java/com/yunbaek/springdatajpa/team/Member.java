@@ -1,4 +1,4 @@
-package com.devkyoungyun.springdatajpa.team;
+package com.yunbaek.springdatajpa.team;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

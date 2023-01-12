@@ -1,4 +1,4 @@
-package com.devkyoungyun.springdatajpa.team;
+package com.yunbaek.springdatajpa.team;
 
 import static org.assertj.core.api.Assertions.*;
 

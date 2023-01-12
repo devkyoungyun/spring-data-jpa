@@ -1,4 +1,4 @@
-package com.devkyoungyun.springdatajpa;
+package com.yunbaek.springdatajpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
