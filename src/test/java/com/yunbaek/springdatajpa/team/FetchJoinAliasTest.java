@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import com.yunbaek.springdatajpa.team.dto.TeamInquiryDTO;
+
 @DataJpaTest
 class FetchJoinAliasTest {
 
@@ -78,6 +80,21 @@ class FetchJoinAliasTest {
 		assertThat(result.get(0).getMembers())
 			.hasSize(2)
 			.extracting("username").containsExactly("user1", "user2");
+	}
+
+	@DisplayName("DTO를 통한 조회")
+	@Test
+	void joinUsingAliasWithDtoTest() {
+		List<TeamInquiryDTO> resultList = em.createQuery(
+				"select new com.yunbaek.springdatajpa.team.dto.TeamInquiryDTO(t.id, t.name, m.id, m.username) "
+					+ "from Team t join t.members m", TeamInquiryDTO.class)
+			.getResultList();
+
+		for (TeamInquiryDTO teamInquiryDTO : resultList) {
+			System.out.println("teamInquiryDTO = " + teamInquiryDTO);
+		}
+
+		assertThat(resultList).hasSize(2);
 	}
 
 }
